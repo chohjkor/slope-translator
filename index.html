@@ -6,114 +6,166 @@
   <meta name="theme-color" content="#2563eb" />
   <title>Slope Translator</title>
 
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.svg" />
+
   <style>
-    :root{
-      --primary:#2563eb;
-      --bg:#f1f5f9;
-      --card-bg:#ffffff;
-      --text-main:#1e293b;
-      --text-muted:#64748b;
-      --border:#e2e8f0;
-      --good:#16a34a;
-      --warn:#f59e0b;
-      --bad:#ef4444;
+    :root {
+      --primary: #2563eb;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --warn: #b45309;
+      --warn-bg: #fffbeb;
     }
-    *{
-      box-sizing:border-box;margin:0;padding:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      -webkit-tap-highlight-color:transparent;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
-    body{
-      background:var(--bg);color:var(--text-main);
-      display:flex;justify-content:center;padding:1rem;
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
     }
-    .app-container{
-      width:100%;max-width:560px;
-      display:flex;flex-direction:column;gap:1.25rem;
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
-    h1{ text-align:center;font-size:1.5rem;color:var(--primary);padding:1rem 0; }
-    .card{
-      background:var(--card-bg);
-      border-radius:1rem;
-      padding:1.25rem;
-      box-shadow:0 4px 6px -1px rgba(0,0,0,.10),0 2px 4px -2px rgba(0,0,0,.10);
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      padding: 1rem 0;
+      font-weight: 800;
+      letter-spacing: -0.02em;
     }
-    .input-group{ display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem; }
-    .input-group label{ font-size:.875rem;font-weight:700; }
-    input[type="number"]{
-      width:100%;
-      padding:.75rem 1rem;
-      font-size:1.125rem;
-      border:1px solid var(--border);
-      border-radius:.5rem;
-      outline:none;
-      transition:border-color .2s;
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
     }
-    input[type="number"]:focus{ border-color:var(--primary); }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .input-group label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.05rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus { border-color: var(--primary); }
 
-    .grid-3{ display:grid; grid-template-columns:repeat(3, 1fr); gap:.5rem; }
-    .btn{
-      padding:.75rem .5rem;
-      border:1px solid var(--border);
-      border-radius:.6rem;
-      background:transparent;
-      font-size:.95rem;
-      font-weight:800;
-      color:var(--text-muted);
-      cursor:pointer;
-      transition:all .2s;
-      text-align:center;
-      line-height:1.1;
-      user-select:none;
-    }
-    .btn small{ display:block;font-weight:700;font-size:.75rem;opacity:.85;margin-top:.25rem; }
-    .btn.active{ background:var(--primary);color:#fff;border-color:var(--primary); }
-
-    .result-grid{
+    .preset-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:1rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap:0.5rem;
     }
-    .result-item{ display:flex;flex-direction:column;gap:.25rem; }
-    .result-label{ font-size:.75rem;color:var(--text-muted); }
-    .result-value{ font-size:1.35rem;font-weight:900;color:var(--primary); }
-    .unit{ font-size:.9rem;color:var(--text-main);font-weight:700; }
-
-    .badge{
-      display:inline-flex;align-items:center;gap:.4rem;
-      padding:.35rem .55rem;
-      border-radius:999px;
-      font-size:.78rem;
+    .preset-btn{
+      padding:0.75rem 0.75rem;
+      border:1px solid var(--border);
+      border-radius:0.6rem;
+      background:transparent;
+      font-size:0.92rem;
       font-weight:800;
-      border:1px solid var(--border);
-      color:var(--text-main);
-      background:#fff;
+      color: var(--text-muted);
+      cursor:pointer;
+      transition: all 0.2s;
+      text-align:center;
+      line-height: 1.15;
     }
-    .dot{ width:.55rem;height:.55rem;border-radius:50%;display:inline-block; }
-    .dot.good{ background:var(--good); }
-    .dot.warn{ background:var(--warn); }
-    .dot.bad{ background:var(--bad); }
+    .preset-btn small{
+      display:block;
+      margin-top:0.25rem;
+      font-weight:700;
+      color: var(--text-muted);
+      opacity: 0.9;
+    }
+    .preset-btn.active{
+      background-color: var(--primary);
+      color:#fff;
+      border-color: var(--primary);
+    }
+    .preset-btn.active small{ color:#eaf2ff; opacity:1; }
 
-    .table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      overflow:hidden;
-      border:1px solid var(--border);
-      border-radius:.75rem;
+    .hint{
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.35;
     }
-    .table th,.table td{
-      padding:.75rem .75rem;
-      font-size:.9rem;
-      border-bottom:1px solid var(--border);
-      text-align:left;
-      background:#fff;
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
     }
-    .table th{ background:#f8fafc;font-size:.82rem;color:var(--text-muted);font-weight:900; }
-    .table tr:last-child td{ border-bottom:none; }
-    .mono{ font-variant-numeric: tabular-nums; font-feature-settings:"tnum"; }
-    .muted{ color:var(--text-muted); font-size:.8rem; line-height:1.45; }
-    .footer-text{ text-align:center;font-size:.75rem;color:var(--text-muted);margin-top:.25rem; }
+    .result-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      background: #fff;
+    }
+    .result-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .result-value {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+    }
+    .unit {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .warnbox{
+      border: 1px solid #fcd34d;
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-radius: 0.9rem;
+      padding: 1rem 1.1rem;
+      line-height: 1.35;
+      font-size: 0.85rem;
+      display:none;
+    }
+    .warnbox strong{ font-weight: 900; }
+    .footer-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
   </style>
 </head>
 
@@ -121,184 +173,217 @@
   <div class="app-container">
     <h1>Slope Translator</h1>
 
-    <!-- 입력 -->
     <div class="card">
       <div class="input-group">
-        <label for="riseInput">단차 (cm)</label>
-        <input type="number" id="riseInput" placeholder="단차를 입력하세요" inputmode="decimal" />
+        <label for="riseInput">단차(상승높이) (cm)</label>
+        <input type="number" id="riseInput" placeholder="예: 15" inputmode="decimal" />
       </div>
 
       <div class="input-group" style="margin-bottom:0;">
-        <label>법규 기준 빠른 선택</label>
-        <div class="grid-3" id="presetWrap">
-          <button class="btn active" data-ratio="12">
-            기본 1:12
-            <small>경사로 기본</small>
+        <label>법규 프리셋</label>
+        <div class="preset-grid" id="presetGrid">
+          <button class="preset-btn" data-ratio="18" data-kind="approach">
+            접근로 1:18
+            <small>(권장 기준)</small>
           </button>
-          <button class="btn" data-ratio="8">
-            완화 1:8
-            <small>예외/완화</small>
+          <button class="preset-btn active" data-ratio="12" data-kind="ramp">
+            경사로 1:12
+            <small>(기본 기준)</small>
           </button>
-          <button class="btn" data-ratio="24">
-            평지 1:24
-            <small>완만 기준</small>
+          <button class="preset-btn" data-ratio="8" data-kind="ramp_relax">
+            경사로 1:8
+            <small>(완화·조건)</small>
+          </button>
+          <button class="preset-btn" data-ratio="30" data-kind="wet">
+            욕실바닥 1:30
+            <small>(바닥 기울기)</small>
           </button>
         </div>
-        <div class="muted" style="margin-top:.6rem;">
-          ※ 실제 적용은 시설 유형·구간 길이·단차 높이·참/중간참(landing) 등 조건에 따라 달라질 수 있습니다.  
-          이 도구는 “계산/비교” 보조용입니다.
+        <div class="hint" id="presetHint">
+          기본값은 <b>경사로 1:12</b>입니다. (1:8은 “기존시설/높이 1m 이하/상시보조” 조건을 모두 충족할 때만 완화 적용)
         </div>
       </div>
     </div>
 
-    <!-- 대표 결과 -->
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem;">
-        <div style="font-weight:900;">선택 기준 결과</div>
-        <span class="badge" id="statusBadge">
-          <span class="dot good" id="statusDot"></span>
-          <span id="statusText">기본(1:12) 선택됨</span>
-        </span>
-      </div>
+    <div class="warnbox" id="warnBox"></div>
 
+    <div class="card">
       <div class="result-grid">
         <div class="result-item">
-          <span class="result-label">필요 수평길이</span>
-          <div class="result-value"><span class="mono" id="outRun">0.00</span> <span class="unit">m</span></div>
+          <span class="result-label">경사부 수평길이(경사면만)</span>
+          <div class="result-value"><span id="outRun">0.00</span> <span class="unit">m</span></div>
         </div>
         <div class="result-item">
           <span class="result-label">비율</span>
-          <div class="result-value mono" style="color:var(--text-main);" id="outRatio">1:12</div>
+          <div class="result-value" id="outRatio">1:12</div>
         </div>
         <div class="result-item">
           <span class="result-label">경사도</span>
-          <div class="result-value"><span class="mono" id="outGrade">8.33</span> <span class="unit">%</span></div>
+          <div class="result-value"><span id="outGrade">8.33</span> <span class="unit">%</span></div>
         </div>
         <div class="result-item">
           <span class="result-label">각도</span>
-          <div class="result-value"><span class="mono" id="outAngle">4.76</span> <span class="unit">°</span></div>
+          <div class="result-value"><span id="outAngle">4.76</span> <span class="unit">°</span></div>
+        </div>
+
+        <div class="result-item">
+          <span class="result-label">중간참(휴식참) 필요 개수</span>
+          <div class="result-value"><span id="outLandings">0</span> <span class="unit">개</span></div>
+        </div>
+        <div class="result-item">
+          <span class="result-label">참 포함 총 길이(추정)</span>
+          <div class="result-value"><span id="outTotal">0.00</span> <span class="unit">m</span></div>
+        </div>
+
+        <div class="result-item">
+          <span class="result-label">손잡이(핸드레일) 의무</span>
+          <div class="result-value" id="outHandrail">해당 없음</div>
+        </div>
+        <div class="result-item">
+          <span class="result-label">참고</span>
+          <div class="result-value" id="outNote" style="color:#1e293b;font-size:0.95rem;font-weight:800;">—</div>
         </div>
       </div>
-    </div>
 
-    <!-- 기준 비교표 -->
-    <div class="card">
-      <div style="font-weight:900;margin-bottom:.75rem;">기준별 비교 (단차 기준)</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th style="width:34%;">기준</th>
-            <th style="width:22%;">비율</th>
-            <th style="width:22%;">경사도</th>
-            <th style="width:22%;">필요 수평길이</th>
-          </tr>
-        </thead>
-        <tbody id="compareBody"></tbody>
-      </table>
-      <p class="footer-text">본 결과는 참고용이며 실제 시공 전 현장 실측 및 관련 기준 확인을 권장합니다.</p>
+      <p class="footer-text">
+        본 결과는 <b>개략 산정</b>입니다. 실제 설계/시공 전에는 현장 조건(굴절, 폭, 배수, 활동공간 확보 등)과 인허가 기준을 함께 확인하세요.
+      </p>
     </div>
   </div>
 
   <script>
     const riseInput = document.getElementById('riseInput');
 
-    const outRun   = document.getElementById('outRun');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    const presetHint = document.getElementById('presetHint');
+    const warnBox = document.getElementById('warnBox');
+
+    const outRun = document.getElementById('outRun');
     const outRatio = document.getElementById('outRatio');
     const outGrade = document.getElementById('outGrade');
     const outAngle = document.getElementById('outAngle');
-
-    const presetWrap  = document.getElementById('presetWrap');
-    const presetBtns  = presetWrap.querySelectorAll('.btn');
-
-    const compareBody = document.getElementById('compareBody');
-
-    const statusDot  = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-
-    // 조대표님이 말씀하신 “자주 쓰는 프리셋”을 기본 제공
-    // (표현/적용 조건은 기관/시설별로 다를 수 있음)
-    const STANDARDS = [
-      { key:'flat',  label:'평지(완만)', ratio:24 },
-      { key:'base',  label:'기본',       ratio:12 },
-      { key:'relax', label:'완화',       ratio: 8 },
-    ];
+    const outLandings = document.getElementById('outLandings');
+    const outTotal = document.getElementById('outTotal');
+    const outHandrail = document.getElementById('outHandrail');
+    const outNote = document.getElementById('outNote');
 
     let currentRatio = 12;
+    let currentKind = 'ramp'; // approach | ramp | ramp_relax | wet
 
-    function gradePercent(ratio){ return 100 / ratio; }
-    function angleDeg(ratio){ return Math.atan(1 / ratio) * (180 / Math.PI); }
+    // 규정 기반 상수(문서에서 자주 쓰이는 값)
+    const LANDING_RISE_LIMIT_CM = 75;   // 0.75m 이내마다 참(휴식참) 설치
+    const LANDING_LEN_M = 1.5;          // 활동공간 1.5x1.5를 보수적으로 “길이 1.5m”로 환산(추정치)
+    const HANDRAIL_LEN_M = 1.8;         // 경사로 길이 1.8m 이상이면 손잡이 의무
+    const HANDRAIL_RISE_CM = 15;        // 높이 0.15m 이상이면 손잡이 의무
+    const RELAX_MAX_RISE_CM = 100;      // 1:8 완화는 “높이 1m 이하” 조건 포함
 
-    function runMeters(riseCm, ratio){
-      const runCm = riseCm * ratio;
-      return runCm / 100;
+    function setActivePreset(btn) {
+      presetBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentRatio = parseInt(btn.dataset.ratio, 10);
+      currentKind = btn.dataset.kind;
+      updatePresetHint();
+      calculate();
     }
 
-    function setStatusByRatio(ratio){
-      // “좋음/주의/강함(급경사)” 같은 표시를 UX로 주되,
-      // 법적 판정 문구는 과장하지 않고 “선택됨/참고”로 유지
-      if(ratio >= 24){
-        statusDot.className = 'dot good';
-        statusText.textContent = '평지(1:24) 선택됨';
-      }else if(ratio >= 12){
-        statusDot.className = 'dot good';
-        statusText.textContent = '기본(1:12) 또는 그보다 완만 (참고)';
-      }else if(ratio >= 8){
-        statusDot.className = 'dot warn';
-        statusText.textContent = '완화(1:8) 수준 (적용 조건 확인 필요)';
-      }else{
-        statusDot.className = 'dot bad';
-        statusText.textContent = '급경사 영역 (주의)';
+    function updatePresetHint(){
+      if(currentKind === 'approach'){
+        presetHint.innerHTML = '“접근로”는 원칙적으로 <b>1:18 이하</b>가 기준이며, 지형상 곤란한 경우 <b>1:12까지</b> 완화될 수 있습니다.';
+      } else if(currentKind === 'ramp'){
+        presetHint.innerHTML = '“경사로” 기본 기준은 <b>1:12 이하</b>입니다. 또한 높이 0.75m 이내마다 참(휴식참), 시작/끝/굴절/참에 1.5×1.5 활동공간이 요구됩니다.';
+      } else if(currentKind === 'ramp_relax'){
+        presetHint.innerHTML = '<b>1:8</b>은 일반 기준이 아니라 “완화”입니다. <b>기존시설</b> + <b>높이 1m 이하</b> + <b>상시보조</b> 조건을 <u>모두</u> 충족할 때만 적용 가능성을 검토하세요.';
+      } else {
+        presetHint.innerHTML = '욕실/샤워실 등 “바닥 기울기”는 <b>1:30 이하</b>가 기준으로 제시됩니다. (경사로와 별개 항목)';
       }
     }
 
-    function renderCompare(riseCm){
-      compareBody.innerHTML = '';
-      STANDARDS.forEach(s => {
-        const tr = document.createElement('tr');
-
-        const td1 = document.createElement('td');
-        td1.innerHTML = `<strong>${s.label}</strong>`;
-
-        const td2 = document.createElement('td');
-        td2.className = 'mono';
-        td2.textContent = `1:${s.ratio}`;
-
-        const td3 = document.createElement('td');
-        td3.className = 'mono';
-        td3.textContent = `${gradePercent(s.ratio).toFixed(2)}%`;
-
-        const td4 = document.createElement('td');
-        td4.className = 'mono';
-        td4.textContent = `${runMeters(riseCm, s.ratio).toFixed(2)} m`;
-
-        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4);
-        compareBody.appendChild(tr);
-      });
+    function showWarn(html){
+      warnBox.innerHTML = html;
+      warnBox.style.display = 'block';
+    }
+    function hideWarn(){
+      warnBox.style.display = 'none';
+      warnBox.innerHTML = '';
     }
 
-    function calculate(){
+    function calculate() {
       const riseCm = parseFloat(riseInput.value) || 0;
 
-      outRun.textContent   = runMeters(riseCm, currentRatio).toFixed(2);
-      outRatio.textContent = `1:${currentRatio}`;
-      outGrade.textContent = gradePercent(currentRatio).toFixed(2);
-      outAngle.textContent = angleDeg(currentRatio).toFixed(2);
+      // 기본 산정
+      const runCm = riseCm * currentRatio;
+      const runM = runCm / 100;
+      const gradePercent = 100 / currentRatio;
+      const angleDeg = Math.atan(1 / currentRatio) * (180 / Math.PI);
 
-      setStatusByRatio(currentRatio);
-      renderCompare(riseCm);
+      outRun.textContent = runM.toFixed(2);
+      outRatio.textContent = `1:${currentRatio}`;
+      outGrade.textContent = gradePercent.toFixed(2);
+      outAngle.textContent = angleDeg.toFixed(2);
+
+      // 참(landing) 개수: 높이 0.75m(75cm) 이내마다 필요 → 구간 수 = ceil(rise/75), 중간참 = 구간-1
+      const segments = riseCm > 0 ? Math.ceil(riseCm / LANDING_RISE_LIMIT_CM) : 0;
+      const intermediateLandings = Math.max(0, segments - 1);
+      outLandings.textContent = String(intermediateLandings);
+
+      // 참 포함 총 길이(추정): 경사부 + 중간참(각 1.5m로 보수 환산)
+      const totalM = runM + (intermediateLandings * LANDING_LEN_M);
+      outTotal.textContent = totalM.toFixed(2);
+
+      // 손잡이 의무: 경사로 항목에서만 판단
+      const handrailRequired = (currentKind === 'ramp' || currentKind === 'ramp_relax')
+        ? (runM >= HANDRAIL_LEN_M || riseCm >= HANDRAIL_RISE_CM)
+        : false;
+
+      outHandrail.textContent = handrailRequired ? '필수' : '해당 없음';
+
+      // 코멘트/경고
+      hideWarn();
+      outNote.textContent = '—';
+
+      // 1:8 완화 경고(조건)
+      if (currentKind === 'ramp_relax') {
+        const overHeight = riseCm > RELAX_MAX_RISE_CM;
+        if (overHeight) {
+          showWarn(
+            `<strong>주의:</strong> 1:8 “완화”는 <b>높이 1m 이하</b> 조건이 포함됩니다. 현재 입력(<b>${(riseCm/100).toFixed(2)}m</b>)은 1m를 초과하여 <b>기준 위반 가능성</b>이 큽니다.<br><br>
+             또한 1:8은 <b>기존시설</b> + <b>구조상 1:12 곤란</b> + <b>상시보조</b> 조건을 <u>모두</u> 충족해야 합니다.`
+          );
+        } else {
+          showWarn(
+            `<strong>완화 적용 체크:</strong> 1:8은 “일반 기준”이 아니라 <b>완화</b>입니다.<br>
+             ✅ 기존시설 설치<br>
+             ✅ 높이 1m 이하 (현재 ${(riseCm/100).toFixed(2)}m)<br>
+             ✅ 상시 보조서비스 제공<br>
+             위 3조건을 <u>모두</u> 만족하는지 확인하세요.`
+          );
+        }
+        outNote.textContent = '완화 기준(조건부)';
+      }
+
+      // 길이가 길어질 때 경고(실무 체감용): 경사부 9m 이상 또는 총길이 12m 이상이면 한 번 더 눈에 띄게
+      if ((currentKind === 'ramp' || currentKind === 'ramp_relax') && riseCm > 0) {
+        if (runM >= 9 || totalM >= 12) {
+          showWarn(
+            (warnBox.style.display === 'block' ? warnBox.innerHTML + '<hr style="border:none;border-top:1px solid #fde68a;margin:0.9rem 0;">' : '') +
+            `<strong>길이 경고:</strong> 경사로는 길어질수록 “면적·동선·피난·관리” 이슈가 같이 커집니다.<br>
+             현재 경사부 <b>${runM.toFixed(2)}m</b>, (중간참 ${intermediateLandings}개 포함 추정) 총 <b>${totalM.toFixed(2)}m</b> 입니다.`
+          );
+        }
+      }
+
+      // 접근로/바닥 코멘트
+      if (currentKind === 'approach') outNote.textContent = '접근로 기준(권장)';
+      if (currentKind === 'wet') outNote.textContent = '바닥 기울기 항목';
     }
 
     riseInput.addEventListener('input', calculate);
 
     presetBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        presetBtns.forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-        currentRatio = parseInt(e.currentTarget.dataset.ratio, 10);
-        calculate();
-      });
+      btn.addEventListener('click', (e) => setActivePreset(e.currentTarget));
     });
 
+    updatePresetHint();
     calculate();
   </script>
 </body>
