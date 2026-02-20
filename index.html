@@ -1,326 +1,310 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>Slope Translator</title>
+
+  <!-- PWA 필수 -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.svg" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      color: var(--primary);
+      padding: 1rem 0;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .input-group label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1.125rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+    .ratio-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+    .ratio-btn {
+      padding: 0.75rem 0;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: transparent;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ratio-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:0.5rem;
+    }
+    .mode-btn{
+      padding:0.75rem 0;
+      border:1px solid var(--border);
+      border-radius:0.5rem;
+      background:transparent;
+      font-size:0.95rem;
+      font-weight:700;
+      color: var(--text-muted);
+      cursor:pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active{
+      background-color: var(--primary);
+      color:#fff;
+      border-color: var(--primary);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .result-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .result-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .result-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .unit {
+      font-size: 0.875rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    .footer-text {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* 모드에 따라 “대표값”을 크게 보이게 하는 클래스 */
+    .primary-metric .result-value{
+      font-size: 1.55rem;
+    }
+    .secondary-metric .result-value{
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+    .secondary-metric .result-label{
+      color: var(--text-muted);
+    }
   </style>
 </head>
+
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ko"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="theme-color" content="#2563eb" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Slope Translator&lt;/title&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- PWA 필수 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="manifest" href="manifest.webmanifest" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="apple-touch-icon" href="icon-192.svg" /&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--primary: #2563eb;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--bg: #f1f5f9;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--card-bg: #ffffff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text-main: #1e293b;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text-muted: #64748b;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--border: #e2e8f0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>* {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-tap-highlight-color: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-main);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.app-container {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 480px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 1.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1rem 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--card-bg);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.input-group label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.875rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-main);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="number"] {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0.75rem 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.125rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: border-color 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="number"]:focus {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.ratio-grid {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: repeat(5, 1fr);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.ratio-btn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0.75rem 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.875rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.ratio-btn.active {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mode-grid{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: repeat(3, 1fr);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mode-btn{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:0.75rem 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--border);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:transparent;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:0.95rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor:pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.2s;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.mode-btn.active{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-grid {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: 1fr 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 1.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-item {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 0.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-value {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.unit {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.875rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-main);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.footer-text {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 0.25rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* 모드에 따라 “대표값”을 크게 보이게 하는 클래스 */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.primary-metric .result-value{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.55rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.secondary-metric .result-value{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.05rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-main);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.secondary-metric .result-label{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--text-muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="app-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Slope Translator&lt;/h1&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="input-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="riseInput"&gt;단차 (cm)&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="number" id="riseInput" placeholder="단차를 입력하세요" inputmode="decimal" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="input-group" style="margin-bottom: 0;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;기준 비율 선택&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="ratio-grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="ratio-btn" data-ratio="8"&gt;1:8&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="ratio-btn" data-ratio="10"&gt;1:10&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="ratio-btn active" data-ratio="12"&gt;1:12&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="ratio-btn" data-ratio="15"&gt;1:15&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="ratio-btn" data-ratio="20"&gt;1:20&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="input-group" style="margin-bottom: 0;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label&gt;산업별 보기&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mode-grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="mode-btn active" data-mode="arch"&gt;건축&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="mode-btn" data-mode="civil"&gt;토목&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="mode-btn" data-mode="eng"&gt;엔지니어링&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card result-grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="result-label"&gt;필요 수평길이&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="result-value"&gt;&lt;span id="outRun"&gt;0.00&lt;/span&gt; &lt;span class="unit"&gt;m&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="result-label"&gt;비율&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="result-value" id="outRatio"&gt;1:12&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="result-label"&gt;경사도&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="result-value"&gt;&lt;span id="outGrade"&gt;8.33&lt;/span&gt; &lt;span class="unit"&gt;%&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-item"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="result-label"&gt;각도&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="result-value"&gt;&lt;span id="outAngle"&gt;4.76&lt;/span&gt; &lt;span class="unit"&gt;°&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p class="footer-text"&gt;본 결과는 참고용이며 실제 시공 전 현장 실측을 권장합니다.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const riseInput = document.getElementById('riseInput');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ratioBtns = document.querySelectorAll('.ratio-btn');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const outRun = document.getElementById('outRun');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const outRatio = document.getElementById('outRatio');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const outGrade = document.getElementById('outGrade');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const outAngle = document.getElementById('outAngle');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 결과 항목(4개)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const resultItems = document.querySelectorAll('.result-item');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const itemRun = resultItems[0];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const itemRatio = resultItems[1];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const itemGrade = resultItems[2];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const itemAngle = resultItems[3];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 모드 버튼</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const modeBtns = document.querySelectorAll('.mode-btn');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentRatio = 12;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentMode = 'arch'; // arch | civil | eng</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function setPrimary(item) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>[itemRun, itemRatio, itemGrade, itemAngle].forEach(i =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>i.classList.remove('primary-metric', 'secondary-metric');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>i.classList.add('secondary-metric');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>item.classList.remove('secondary-metric');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>item.classList.add('primary-metric');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function applyMode() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (currentMode === 'arch') setPrimary(itemRatio); <span class="Apple-converted-space">      </span>// 건축: 1:n</p>
-<p class="p1"><span class="Apple-converted-space">      </span>else if (currentMode === 'civil') setPrimary(itemGrade); // 토목: %</p>
-<p class="p1"><span class="Apple-converted-space">      </span>else setPrimary(itemAngle); <span class="Apple-converted-space">                              </span>// 엔지: °</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function calculate() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const riseCm = parseFloat(riseInput.value) || 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const runCm = riseCm * currentRatio;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const runM = runCm / 100;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const gradePercent = 100 / currentRatio;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const angleDeg = Math.atan(1 / currentRatio) * (180 / Math.PI);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>outRun.textContent = runM.toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outRatio.textContent = `1:${currentRatio}`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outGrade.textContent = gradePercent.toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outAngle.textContent = angleDeg.toFixed(2);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>applyMode();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>riseInput.addEventListener('input', calculate);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ratioBtns.forEach(btn =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>btn.addEventListener('click', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ratioBtns.forEach(b =&gt; b.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>e.currentTarget.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>currentRatio = parseInt(e.currentTarget.dataset.ratio, 10);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>calculate();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>modeBtns.forEach(btn =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>btn.addEventListener('click', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>modeBtns.forEach(b =&gt; b.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>e.currentTarget.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>currentMode = e.currentTarget.dataset.mode;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>calculate();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>calculate();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if ("serviceWorker" in navigator) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.addEventListener("load", () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>navigator.serviceWorker.register("./sw.js").catch(() =&gt; {});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+  <div class="app-container">
+    <h1>Slope Translator</h1>
+
+    <div class="card">
+      <div class="input-group">
+        <label for="riseInput">단차 (cm)</label>
+        <input type="number" id="riseInput" placeholder="단차를 입력하세요" inputmode="decimal" />
+      </div>
+
+      <div class="input-group" style="margin-bottom: 0;">
+        <label>기준 비율 선택</label>
+        <div class="ratio-grid">
+          <button class="ratio-btn" data-ratio="8">1:8</button>
+          <button class="ratio-btn" data-ratio="10">1:10</button>
+          <button class="ratio-btn active" data-ratio="12">1:12</button>
+          <button class="ratio-btn" data-ratio="15">1:15</button>
+          <button class="ratio-btn" data-ratio="20">1:20</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="input-group" style="margin-bottom: 0;">
+        <label>산업별 보기</label>
+        <div class="mode-grid">
+          <button class="mode-btn active" data-mode="arch">건축</button>
+          <button class="mode-btn" data-mode="civil">토목</button>
+          <button class="mode-btn" data-mode="eng">엔지니어링</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card result-grid">
+      <div class="result-item">
+        <span class="result-label">필요 수평길이</span>
+        <div class="result-value"><span id="outRun">0.00</span> <span class="unit">m</span></div>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">비율</span>
+        <div class="result-value" id="outRatio">1:12</div>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">경사도</span>
+        <div class="result-value"><span id="outGrade">8.33</span> <span class="unit">%</span></div>
+      </div>
+
+      <div class="result-item">
+        <span class="result-label">각도</span>
+        <div class="result-value"><span id="outAngle">4.76</span> <span class="unit">°</span></div>
+      </div>
+    </div>
+
+    <p class="footer-text">본 결과는 참고용이며 실제 시공 전 현장 실측을 권장합니다.</p>
+  </div>
+
+  <script>
+    const riseInput = document.getElementById('riseInput');
+    const ratioBtns = document.querySelectorAll('.ratio-btn');
+
+    const outRun = document.getElementById('outRun');
+    const outRatio = document.getElementById('outRatio');
+    const outGrade = document.getElementById('outGrade');
+    const outAngle = document.getElementById('outAngle');
+
+    // 결과 항목(4개)
+    const resultItems = document.querySelectorAll('.result-item');
+    const itemRun = resultItems[0];
+    const itemRatio = resultItems[1];
+    const itemGrade = resultItems[2];
+    const itemAngle = resultItems[3];
+
+    // 모드 버튼
+    const modeBtns = document.querySelectorAll('.mode-btn');
+
+    let currentRatio = 12;
+    let currentMode = 'arch'; // arch | civil | eng
+
+    function setPrimary(item) {
+      [itemRun, itemRatio, itemGrade, itemAngle].forEach(i => {
+        i.classList.remove('primary-metric', 'secondary-metric');
+        i.classList.add('secondary-metric');
+      });
+      item.classList.remove('secondary-metric');
+      item.classList.add('primary-metric');
+    }
+
+    function applyMode() {
+      if (currentMode === 'arch') setPrimary(itemRatio);       // 건축: 1:n
+      else if (currentMode === 'civil') setPrimary(itemGrade); // 토목: %
+      else setPrimary(itemAngle);                               // 엔지: °
+    }
+
+    function calculate() {
+      const riseCm = parseFloat(riseInput.value) || 0;
+
+      const runCm = riseCm * currentRatio;
+      const runM = runCm / 100;
+      const gradePercent = 100 / currentRatio;
+      const angleDeg = Math.atan(1 / currentRatio) * (180 / Math.PI);
+
+      outRun.textContent = runM.toFixed(2);
+      outRatio.textContent = `1:${currentRatio}`;
+      outGrade.textContent = gradePercent.toFixed(2);
+      outAngle.textContent = angleDeg.toFixed(2);
+
+      applyMode();
+    }
+
+    riseInput.addEventListener('input', calculate);
+
+    ratioBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        ratioBtns.forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        currentRatio = parseInt(e.currentTarget.dataset.ratio, 10);
+        calculate();
+      });
+    });
+
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        modeBtns.forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        currentMode = e.currentTarget.dataset.mode;
+        calculate();
+      });
+    });
+
+    calculate();
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>
